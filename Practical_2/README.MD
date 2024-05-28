@@ -166,3 +166,153 @@ Description: Loads a 32-bit word from memory at the address computed by adding t
 |---|---|---|---|---|
 0000000001010 | 00010 | 000 | 00001 | 0010011
 
+
+#### S-type Instruction Format:
+
+
+In RISC-V, S-type instructions are used for storing data from a register to memory. They require a base address (in a register) and an offset (an immediate value) to determine the memory address where the data will be stored.
+
+| imm[11:5] |  rs2   |  rs1   | funct3 |   imm[4:0]  |  opcode|
+| :------: |  :-----: |  :---:   | :------: |   :---:  |  :------:|
+| 25-31  |  20-24  |  15-19   | 12-14  |   7-11   | 0-6|
+
+- `opcode`-Specifies the operation to be performed.
+- `imm`- It contains the immediate value used as an offset for memory access.
+- `funct3`-Additional function bits that help distinguish between different operations.
+- `rs1`-Source register 1.
+- `rs2`-Source register 2.
+
+#### Example
+
+```
+SW x3, 20(x1)
+```
+
+This instruction stores the content of register x3 into memory at the address obtained by adding the contents of register x1 and the immediate offset 20.
+
+- `SW`: This is the mnemonic for the Store Word operation.
+- `x3`: This is the source register containing the data to be stored.
+- `20`: This is the immediate offset, which specifies the displacement from the base address (x1 in this case).
+- `x1`: This is the base register containing the base address.
+So, this instruction instructs the processor to store the content of register `x3` into memory at the address x1 + 20.
+
+### B-type instruction
+
+B-type instructions perform conditional branching based on a comparison result. They use branch offsets (immediate values) to determine the target address.
+
+| imm[12] imm[10:5] |  rs2   |  rs1   | funct3 |   imm[4:1] imm[11] |  opcode|
+| :---------------: |  :-----:|  :---:   | :------: |   :---:  |  :------:|
+| 25-31  |  20-24  |  15-19   | 12-14  |   7-11   | 0-6|
+
+- `imm[12] imm[10:5]`: This field represents bits 25 to 31 and 7 to 11 of the instruction. Together, they encode a 13-bit signed immediate value. Bit 12 is the most significant bit (MSB), and bits 10 to 5 and 4 to 1 form the remaining bits of the immediate value.
+
+- `rs2`: This field spans bits 20 to 24 of the instruction. It specifies the second source register whose content will be used for comparison.
+
+- `rs1`: This field spans bits 15 to 19 of the instruction. It specifies the first source register whose content will be used for comparison.
+
+- `funct3`: This field spans bits 12 to 14 of the instruction. It specifies the function code for the specific branch condition (e.g., BEQ for Branch if Equal).
+
+- `imm[4:1] imm[11]`: This field represents bits 6 to 2 and 11 of the instruction. They are additional bits for the immediate value.
+
+- `opcode`: This field spans bits 0 to 6 of the instruction. It specifies the opcode for the B-type instruction.
+
+#### Example-
+```
+BNE x1, x2, loop
+```
+This instruction checks if the contents of register `x1`and `x2` are not equal. If they are not equal, it branches to the label loop. Otherwise, execution continues with the next instruction.
+
+### U-type instruction
+
+The U-type (Upper Immediate) instruction in RISC-V is used to load an immediate value into a register. This immediate value is encoded in the instruction itself, allowing for a larger range of immediate values than immediate-type instructions.
+
+| imm[31:12] |   rd |  opcode|
+| :----------|  :---:|  :---:|
+| 12-31 |   7-11   | 0-6|
+
+Let's break down each field:
+
+- `imm[31:12]`: This field spans bits 12 to 31 of the instruction. It represents a 20-bit immediate value, which will be loaded into the upper bits of the destination register.
+  
+- `rd`: This field spans bits 7 to 11 of the instruction. It specifies the destination register where the immediate value will be loaded.
+  
+- `opcode`: This field spans bits 0 to 6 of the instruction. It specifies the opcode for the U-type instruction.
+
+In summary, the U-type instruction allows for loading a 20-bit immediate value into the upper 20 bits of a register.
+
+#### Example-
+```
+LUI x1, 1000
+```
+This instruction loads the immediate value 1000 into register x1. The immediate value is left-shifted by 12 bits and sign-extended to fill the 32-bit register x1. After execution, register x1 will contain the value 1000 shifted left by 12 bits (i.e., 1000 << 12).
+
+
+### J-type instruction
+
+
+The J-type (Jump) instruction in RISC-V is used for unconditional jumps to a target address. These instructions are typically used for implementing function calls, subroutine jumps, or unconditional branches.
+
+| imm[20] |  imm[10:1]  |  imm[11]   | imm[19:12] |   rd |  opcode|
+| :---------------: |  :-----:|  :---:   | :------: |   :---:  |  :------:|
+| 25-31  |  20-24  |  15-19   | 12-14  |   7-11   | 0-6|
+
+Let's break down each field:
+
+- `imm[20]`: This field represents bit 31 of the instruction. It's the sign bit for the immediate value.
+  
+- `imm[10:1]`: This field spans bits 21 to 30 of the instruction. It represents a 10-bit immediate value, which encodes the target address.
+
+- `imm[11]`: This field spans bits 20 to 20 of the instruction. It's an additional bit for the immediate value.
+
+- `imm[19:12]`: This field spans bits 12 to 19 of the instruction. It's an additional eight bits for the immediate value.
+
+- `rd`: This field spans bits 7 to 11 of the instruction. It specifies the destination register where the return address will be stored.
+
+- `opcode`: This field spans bits 0 to 6 of the instruction. It specifies the opcode for the J-type instruction.
+
+The J-type instruction allows for unconditional jumps to a target address, with the target address being formed by concatenating the immediate bits from various parts of the instruction.
+
+#### Example-
+```
+JAL x1, target
+```
+This instruction jumps to the target address unconditionally and stores the return address (the address of the next instruction) into register x1. After executing this instruction, the program continues execution from the target address. The link register x1 will hold the address of the next instruction after the jump.
+
+ #### Let's solve some examples-
+```
+ADD r6, r2, r1
+```
+This instruction is an R-type.This will add the contents of registers r2 and r1, and stores the result in register r6.
+```
+SUB r7, r1, r2
+```
+This instruction is an R-type.This will substract the contents of registers r2 and r1, and stores the result in register r7.
+```
+OR r9, r2, r5
+```
+This instruction is an R-type.This instruction computes the bitwise OR of the contents of registers r5 and r2, and stores the result in register r9.
+```
+XOR r10,r1, r4
+```
+This instruction is an R-type.This instruction computes the bitwise XOR of the contents of registers r4 and r1 and will store the result in r10.
+```
+SLT r11, r2,r4
+```
+This instruction is an R-type.This instruction sets r11 to 1 if the value in r2 is less than the value in r4, otherwise it sets r11 to 0.
+```
+ADDI r12, r4, 5
+```
+This instruction is an I-type. This instruction adds 5 to the contents of register r4 and store result in r12.
+```
+SW r3, r1, 2
+```
+It's an S-type (Store Type) instruction. This instruction stores the contents of register r3 into memory at the address formed by adding the contents of register r1 and the immediate offset value 2.
+```
+SRL r16, r14, r2
+```
+This instruction is an R-type. This instruction shifts the contents of register r14 right by the number specified in register r2 and stores the result in register r16.
+```
+BNE r0, r1, 20
+```
+A Shift Right Logical (SRL) operation. the instruction would perform a logical right shift on the value in register r1 by 3 bits and store the result in register r0.
+
