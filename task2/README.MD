@@ -1,4 +1,4 @@
-# Practical 2
+# Task 2
 ## Identify various RISCV instruction types (R,I,S,B,U,J) 
 ### Reference used 
 - [Technical specifications of RISCV](https://riscv.org/technical/specifications/)
