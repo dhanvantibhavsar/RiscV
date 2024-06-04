@@ -43,7 +43,7 @@ The MNIST dataset is split into two subsets:
 - Testing Set: This subset consists of 10,000 images used for testing and benchmarking the trained models.
 
 #### Sample Image of the MNIST dataset
-![sample Image](images\MNIST_dataset.png)
+![sample Image](./images/MNIST_dataset.png)
 
 The example showcases the variety and complexity of the handwritten digits in the MNIST dataset, highlighting the importance of a diverse dataset for training robust image classification models.
 
@@ -91,8 +91,7 @@ The following connections are required for BitNetMCU real time implementation:
 - Connect push button to VSD Squadron Mini
 - Connect battery to VSD Squadron Mini
 
-
-
+![circuit diagram](./images/diagram.png)
 
 
 
