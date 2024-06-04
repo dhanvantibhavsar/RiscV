@@ -6,6 +6,8 @@ The project is based on the Risc-V microcontroller and MNIST dataset.
 ### Risc-V
 - Board- VSD Squadron Mini
 - Processor used- CH32V003F4U6 chip with 32-bit RISC-V core based on RV32EC instruction set
+- dataset used- MNIST 
+- Algorithm used- Low-bit quntized neural network
 
 #### Low-bit quntized neural network
 
@@ -82,16 +84,9 @@ The example showcases the variety and complexity of the handwritten digits in th
 No hardware connections are required for BitNetMCU only we have to connect VSD squadron with computer using USB cable.
 ### Circuit Connection for BitNetMCU real time
 The following connections are required for BitNetMCU real time implementation:
-- Connect VCC of camera module to VCC of VSD Squadron Mini
-- Connect GND of camera module to GND of VSD Squadron Mini
-- Connect SCL of camera module to SCL of VSD Squadron Mini
-- Connect SDA of camera module to SDA of VSD Squadron Mini
-- Connect VCC of 7 segment display to VCC of VSD Squadron Mini
-- Connect GND of 7 segment display to GND of VSD Squadron Mini
-- Connect push button to VSD Squadron Mini
-- Connect battery to VSD Squadron Mini
 
-![circuit diagram](./images/diagram.png)
+
+![circuit diagram](./images/circuitdiagram.jpeg)
 
 
 
