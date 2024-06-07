@@ -88,6 +88,84 @@ The following connections are required for BitNetMCU real time implementation:
 
 ![circuit diagram](./images/circuitdiagram.jpeg)
 
+## BitNetMcu Implementation
+
+### Step 1: Install all required Libraries
+```
+pip install -r requirements.txt
+```
+### Step 2: Setup Configuration
+Edit [trainingparameter.yaml](./trainingparameters.yaml) file and update configuration settings as per following.
+
+#### Quantization Settings
+
+- **QuantType:** `4bitsym`
+  - Specifies the quantization method to be used. '4bitsym' stands for symmetric 4-bit quantization, which reduces the precision of weights to 4 bits symmetrically around zero.
+
+- **BPW:** `4`
+  - Stands for Bits Per Weight, indicating that each weight in the model will be represented using 4 bits.
+
+- **NormType:** `RMS`
+  - Specifies the normalization technique. 'RMS' (Root Mean Square) normalization is used to standardize the range of independent variables or features of data. Other options include 'Lin' for linear normalization and 'BatchNorm' for batch normalization.
+
+- **WScale:** `PerTensor`
+  - Defines the scale application strategy. 'PerTensor' means that scaling is applied to the entire tensor, whereas 'PerOutput' would apply scaling to each output individually.
+
+- **quantscale:** `0.25`
+  - This parameter sets the scale of the standard deviation for each tensor relative to the maximum value, effectively controlling the spread of weight values after quantization.
+
+#### Learning Parameters
+
+- **batch_size:** `128`
+  - Indicates the number of training examples utilized in one iteration. A batch size of 128 means that 128 samples are processed before the model’s internal parameters are updated.
+
+- **num_epochs:** `60`
+  - Specifies the number of complete passes through the training dataset. Training will occur over 60 epochs.
+
+- **scheduler:** `Cosine`
+  - The learning rate scheduler type. 'Cosine' annealing gradually reduces the learning rate following a cosine curve. Alternative schedulers include 'StepLR', which reduces the learning rate at regular intervals.
+
+- **learning_rate:** `0.001`
+  - The initial learning rate for the optimizer, determining the step size at each iteration while moving toward a minimum of the loss function.
+
+- **lr_decay:** `0.1`
+  - Factor by which the learning rate is reduced. This is used with step-based learning rate schedulers like 'StepLR' but is not applicable with the 'Cosine' scheduler.
+
+- **step_size:** `10`
+  - Step size for learning rate decay in the 'StepLR' scheduler, indicating the number of epochs between each decay step.
+
+#### Data Augmentation
+
+- **augmentation:** `True`
+  - A Boolean flag indicating whether data augmentation is to be applied. If True, data augmentation techniques will be used to artificially expand the dataset.
+
+- **rotation1:** `10`
+  - Specifies the degree of rotation for data augmentation. Images will be rotated up to 10 degrees in one direction.
+
+- **rotation2:** `10`
+  - Specifies the degree of rotation in the opposite direction, allowing rotations up to 10 degrees.
+
+#### Model Parameters
+
+- **network_width1:** `64`
+  - Width of the first layer in the neural network, indicating that the first layer contains 64 units or neurons.
+
+- **network_width2:** `64`
+  - Width of the second layer in the neural network, with 64 units or neurons.
+
+- **network_width3:** `64`
+  - Width of the third layer in the neural network, with 64 units or neurons.
+
+#### Name
+
+- **runtag:** `opt_`
+  - A string prefix used for naming the run or experiment. This helps in identifying and organizing different experimental runs.
+
+#### Summary
+
+This configuration script sets the parameters for a machine learning experiment involving 4-bit symmetric quantization with RMS normalization and per-tensor weight scaling. The model will be trained using a batch size of 128 over 60 epochs with a cosine annealing learning rate scheduler starting at 0.001. Data augmentation includes rotations up to 10 degrees. The neural network architecture consists of three layers, each with 64 units. The run is tagged with the prefix "opt_" to facilitate easy identification.
+
+
 
 
 
