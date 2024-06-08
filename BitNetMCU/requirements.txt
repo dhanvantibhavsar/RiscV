@@ -4,3 +4,4 @@ numpy
 PyYAML
 tensorboard
 matplotlib
+seaborn

@@ -1,0 +1,47 @@
+Load parameters from file: trainingparameters.yaml
+opt_Cosine_lr0.001_Aug_BitMnist_PerTensor_4bitsym_RMS_width64_64_64_bs128_epochs60
+Loading model...
+Inference using the original model...
+Accuracy/Test of trained model: 98.72999999999999 %
+Quantizing model...
+
+Layer: 1, Max: 7.5, Min: -7.5, Mean: -0.0523681640625, Std: 2.5359845299863766
+Values: [-7.5 -6.5 -5.5 -4.5 -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5  4.5  5.5
+  6.5  7.5]
+Percent: [ 2.70385742  0.72021484  0.95214844  1.53808594  2.83813477  6.64672852
+ 13.49487305 20.68481445 21.11816406 13.84887695  7.15332031  3.49731445
+  1.86767578  1.10473633  0.65307617  1.17797852]
+Entropy: 3.23 bits. Code capacity used: 80.66900624529619 %
+
+Layer: 2, Max: 7.5, Min: -7.5, Mean: -0.123779296875, Std: 2.57187898202173
+Values: [-7.5 -6.5 -5.5 -4.5 -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5  4.5  5.5
+  6.5  7.5]
+Percent: [ 1.171875    0.95214844  1.5625      3.41796875  5.78613281  8.71582031
+ 11.88964844 16.72363281 16.47949219 14.11132812  9.35058594  5.2734375
+  2.49023438  1.39160156  0.41503906  0.26855469]
+Entropy: 3.39 bits. Code capacity used: 84.6481927842242 %
+
+Layer: 3, Max: 7.5, Min: -7.5, Mean: -0.24853515625, Std: 2.532551324970096
+Values: [-7.5 -6.5 -5.5 -4.5 -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5  4.5  5.5
+  6.5  7.5]
+Percent: [ 0.92773438  1.22070312  1.73339844  4.02832031  5.83496094 10.00976562
+ 12.57324219 14.59960938 16.28417969 14.08691406  9.86328125  5.46875
+  2.49023438  0.70800781  0.14648438  0.02441406]
+Entropy: 3.36 bits. Code capacity used: 84.12109139085851 %
+
+Layer: 4, Max: 4.5, Min: -6.5, Mean: -0.725, Std: 2.2588713996153036
+Values: [-6.5 -5.5 -4.5 -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5  4.5]
+Percent: [ 0.15625  0.9375   4.0625  11.5625  18.4375  13.4375  13.59375 11.71875
+ 11.09375  9.84375  4.84375  0.3125 ]
+Entropy: 3.14 bits. Code capacity used: 78.41891886925568 %
+Total number of bits: 100864 (12.3125 kbytes)
+inference of quantized model
+Accuracy/Test of quantized model: 98.75 %
+Exporting model to header file
+Layer: L1 Quantization type: <4bitsym>, Bits per weight: 4, Num. incoming: 256,  Num outgoing: 64
+Layer: L2 Quantization type: <4bitsym>, Bits per weight: 4, Num. incoming: 64,  Num outgoing: 64
+Layer: L3 Quantization type: <4bitsym>, Bits per weight: 4, Num. incoming: 64,  Num outgoing: 64
+Layer: L4 Quantization type: <4bitsym>, Bits per weight: 4, Num. incoming: 64,  Num outgoing: 10
+
+
+
