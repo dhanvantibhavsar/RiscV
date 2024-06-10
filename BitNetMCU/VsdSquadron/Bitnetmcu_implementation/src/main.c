@@ -12,13 +12,13 @@
 // #include "BitNetMCU_model_12k_FP130.h"
 #include <stdio.h>
 #define SEG7_PORTD GPIOD
-#define SEG7_PORTA GPIOA
+#define SEG7_PORTC GPIOC
 #define SEG7_PIN_E GPIO_Pin_2 //pd2
 #define SEG7_PIN_D GPIO_Pin_3 // pd3
 #define SEG7_PIN_C GPIO_Pin_4 //pd4
 #define SEG7_PIN_G GPIO_Pin_5 // pd5
-#define SEG7_PIN_F GPIO_Pin_2 // pa2
-#define SEG7_PIN_A GPIO_Pin_1 // pa1
+#define SEG7_PIN_F GPIO_Pin_0 // pd0
+#define SEG7_PIN_A GPIO_Pin_1 // pd1
 #define SEG7_PIN_B GPIO_Pin_6 // pd6
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -82,14 +82,14 @@ void displayDigit(uint8_t digit) {
     if (digit > 9) return;
     
     uint8_t segments = digitPatterns[digit];
-    uint8_t GPIO_PIN_RESET = 0;
-	uint8_t GPIO_PIN_SET = GPIO_PIN_RESET^1;
-    GPIO_WriteBit(SEG7_PORTA, SEG7_PIN_A, (segments & 0b00000001) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    uint8_t GPIO_PIN_SET = 0;
+	uint8_t GPIO_PIN_RESET = GPIO_PIN_SET^1;
+    GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_A, (segments & 0b00000001) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_B, (segments & 0b00000010) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_C, (segments & 0b00000100) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_D, (segments & 0b00001000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_E, (segments & 0b00010000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    GPIO_WriteBit(SEG7_PORTA, SEG7_PIN_F, (segments & 0b00100000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_F, (segments & 0b00100000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_G, (segments & 0b01000000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
   
 }
@@ -102,17 +102,17 @@ int main()
 	USART_Printf_Init(115200);
 	GPIO_InitTypeDef GPIO_InitStructure = {0};
 	// Configure GPIO pins for segments
-    GPIO_InitStructure.GPIO_Pin = SEG7_PIN_B | SEG7_PIN_C| SEG7_PIN_D | SEG7_PIN_E| SEG7_PIN_G;
+    GPIO_InitStructure.GPIO_Pin = SEG7_PIN_B | SEG7_PIN_C| SEG7_PIN_D | SEG7_PIN_E| SEG7_PIN_G|SEG7_PIN_F|SEG7_PIN_A;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(SEG7_PORTD, &GPIO_InitStructure);
 
-	GPIO_InitTypeDef GPIO_InitStructure2 = {0};
-	// Configure GPIO pins for segments
-    GPIO_InitStructure2.GPIO_Pin = SEG7_PIN_A | SEG7_PIN_F;
-    GPIO_InitStructure2.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure2.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(SEG7_PORTA, &GPIO_InitStructure2);
+	// GPIO_InitTypeDef GPIO_InitStructure2 = {0};
+	// // Configure GPIO pins for segments
+    // GPIO_InitStructure2.GPIO_Pin = SEG7_PIN_A ;
+    // GPIO_InitStructure2.GPIO_Mode = GPIO_Mode_IPD;
+    // GPIO_InitStructure2.GPIO_Speed = GPIO_Speed_50MHz;
+    // GPIO_Init(SEG7_PORTC, &GPIO_InitStructure2);
 	
 
 
@@ -120,21 +120,24 @@ int main()
     uint8_t A = 0;
 	while(1)
 	{
-		for(uint8_t i =0; i<10;i++){
-			displayDigit(i);
-			Delay_Ms(2000);
-		}
-		// GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_E, A);
+		// for(uint8_t i =0; i<10;i++){
+		// 	displayDigit(i);
+		// 	Delay_Ms(2000);
+		// }
+		GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
+        Delay_Ms(1000);
 		A^=1;
+        GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
+        Delay_Ms(1000);
 		printf("Starting MNIST inference...\n");
 		BitMnistInference(input_data_0, label_0,1);	
-		// Delay_Ms(2000);
+		Delay_Ms(2000);
 		BitMnistInference(input_data_1, label_1,2);	
-		// Delay_Ms(2000);
+		Delay_Ms(2000);
 		BitMnistInference(input_data_2, label_2,3);	
-		// Delay_Ms(2000);
+		Delay_Ms(2000);
 		BitMnistInference(input_data_3, label_3,4);	
-		// Delay_Ms(2000);
+		Delay_Ms(2000);
 	}
 }
 void NMI_Handler(void) {}
