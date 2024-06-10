@@ -4,7 +4,7 @@
 
 // set EXAMPLE to EXAMPLE_UART in setup.h to activate
 #include "setup.h"
-#if EXAMPLE == 4
+#if EXAMPLE == 5
 #include "Arduino.h"
 #include "CameraOV7670.h"
 
@@ -60,6 +60,7 @@ const uint16_t COLOR_RED = 0xF800;
 
 void processGrayscaleFrameBuffered();
 void processGrayscaleFrameDirect();
+void processGrayscaleFrame16x16();
 void processRgbFrameBuffered();
 void processRgbFrameDirect();
 typedef void (*ProcessFrameData)(void) ;
@@ -254,7 +255,7 @@ CameraOV7670 camera(CameraOV7670::RESOLUTION_VGA_640x480, CameraOV7670::PIXEL_YU
 
 #if UART_MODE==18
 const uint16_t lineLength = 160;
-const uint16_t lineCount = 112;
+const uint16_t lineCount = 120;
 const uint32_t baud  = 115200;
 const ProcessFrameData processFrameData = processGrayscaleFrame16x16;
 const uint16_t lineBufferLength = lineLength;
@@ -396,33 +397,74 @@ void processNextGrayscalePixelByteInBuffer() {
 void processGrayscaleFrame16x16(){
   camera.waitForVsync();
   commandDebugPrint("Vsync"); 
+  commandDebugPrint("Vsync2");
   camera.ignoreVerticalPadding();
-  uint8_t  image[160][120];
-  for (int y = 0; y < 160; y++) {
+  uint8_t  image[120][16]={};
+  for (int y = 0; y < 120; y++) {
     camera.ignoreHorizontalPaddingLeft();
-    for (int x = 0; x < 120; x++) {
+    for (int x = 0; x < 160; x++) {
+      uint8_t buffer;
       camera.waitForPixelClockRisingEdge();
-      camera.readPixelByte(image[x][y]);
+      camera.readPixelByte(buffer);
+      image[y][x/10] += buffer; 
+      if(x%10==9){
+        image[y][x/10]/=10;
+      }
+      commandDebugPrint((String)y+":"+(String)x);
+      camera.waitForPixelClockRisingEdge();
     }
     camera.ignoreHorizontalPaddingRight();
   }
-  uint8_t image16x16[16][16];
-  for (int y = 0; y < 16; y++) {
-    for (int x = 0; x < 16; x++) {
-      image16x16[y][x]=0;
-      for (int l=0; l<10; l++) {
-        for(int k=0; k<7; k++) {
-          image16x16[y][x] += image[y*10+l][x*7+k]; 
-        }
-      }
-      image16x16[y][x] /= 70;       
+  commandDebugPrint("ImageCaptured");
+  delay(1000);
+  uint8_t image16x16[16][16]= {};
+  for (int y = 0; y < 16; y++){
+    for(int x = 0; x<120; x++){
+     image16x16[x/8][y] += image[x][y];
+       if(x%8==7){
+      image16x16[x/8][y]/=8;
+       } else if(x==119){
+          image16x16[x/8][y]/=8;
+       }
+        
+       
     }
-  } 
+  }
+  // for (int y = 0; y < 16; y++) {
+  //   for (int x = 0; x < 16; x++) {
+  //     image16x16[y][x]=0;
+  //     for (int l=0; l<10; l++) {
+  //       for(int k=0; k<7; k++) {
+  //         image16x16[y][x] += image[y*7+k][x*10+l]; 
+  //       }
+  //     }
+  //     image16x16[y][x] /= 70;
+  //     commandDebugPrint((String)image16x16[y][x]);  
 
-  for (int y = 0; y < 160; y++) {
-    for (int x = 0; x < 112; x++) {
+  //   }
+  // } 
+
+  for (int y = 0; y < 120; y++) {
+    for (int x = 0; x < 160; x++) {
+      if(x>120)
+      {
+        lineBuffer[0] = formatPixelByteGrayscaleFirst(image16x16[y/8][15]);
       waitForPreviousUartByteToBeSent();
-      UDR0 = image16x16[y/16][x/7];
+      UDR0 = lineBuffer[0];
+      x++;
+      lineBuffer[0] = formatPixelByteGrayscaleSecond(image16x16[y/8][15]);
+      waitForPreviousUartByteToBeSent();
+      UDR0 = lineBuffer[0];
+      }else
+       {
+      lineBuffer[0] = formatPixelByteGrayscaleFirst(image16x16[y/8][x/10]);
+      waitForPreviousUartByteToBeSent();
+      UDR0 = lineBuffer[0];
+      x++;
+      lineBuffer[0] = formatPixelByteGrayscaleSecond(image16x16[y/8][x/10]);
+      waitForPreviousUartByteToBeSent();
+      UDR0 = lineBuffer[0];
+       }
     }
   }
 
@@ -623,6 +665,7 @@ void commandStartNewFrame(uint8_t pixelFormat) {
 
   waitForPreviousUartByteToBeSent();
   UDR0 = checksum;
+  commandDebugPrint("Ankit");
 }
 
 

@@ -15,9 +15,9 @@ void setup() {
 
 
 void loop() {
-  if(digitalRead(8) == LOW) {
+  // if(digitalRead(8) == LOW) {
     processFrame();
-  }
+  // }
 }
 
 
