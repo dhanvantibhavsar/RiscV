@@ -27,6 +27,8 @@
  *  EXAMPLE = 4
  *  Gray scale image @20Hz. Interlaced image.
  *
+ *  EXAMPLE = 5
+ *  Gray scale image for BitNetMCU
  */
 #define EXAMPLE 5
 

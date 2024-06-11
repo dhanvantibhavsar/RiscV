@@ -61,6 +61,7 @@ const uint16_t COLOR_RED = 0xF800;
 void processGrayscaleFrameBuffered();
 void processGrayscaleFrameDirect();
 void processGrayscaleFrame16x16();
+void processGrayscaleFrameBitNetMCU();
 void processRgbFrameBuffered();
 void processRgbFrameDirect();
 typedef void (*ProcessFrameData)(void) ;
@@ -254,10 +255,20 @@ CameraOV7670 camera(CameraOV7670::RESOLUTION_VGA_640x480, CameraOV7670::PIXEL_YU
 #endif
 
 #if UART_MODE==18
-const uint16_t lineLength = 16;
-const uint16_t lineCount = 16;
+const uint16_t lineLength = 112;
+const uint16_t lineCount = 112;
 const uint32_t baud  = 115200;
+#if DisplayMode==0
 const ProcessFrameData processFrameData = processGrayscaleFrameBuffered;
+const int displayMode=0;
+#endif
+
+#if DisplayMode==1
+const ProcessFrameData processFrameData = processGrayscaleFrameBitNetMCU;
+const int displayMode=1;
+
+#endif
+
 const uint16_t lineBufferLength = lineLength;
 const bool isSendWhileBuffering = true;
 const uint8_t uartPixelFormat = UART_PIXEL_FORMAT_GRAYSCALE;
@@ -332,6 +343,7 @@ void sendBlankFrame(uint16_t color) {
 
 // this is called in Arduino loop() function
 void processFrame() {
+  if (displayMode==0){
   processedByteCountDuringCameraRead = 0;
   commandStartNewFrame(uartPixelFormat);
   noInterrupts();
@@ -339,9 +351,48 @@ void processFrame() {
   interrupts();
   frameCounter++;
   commandDebugPrint("Frame " + String(frameCounter)/* + " " + String(processedByteCountDuringCameraRead)*/);
+  }
+  if (displayMode==1){
+    processFrameData();
+  }
   //commandDebugPrint("Frame " + String(frameCounter, 16)); // send number in hexadecimal
 }
 
+
+void processGrayscaleFrameBitNetMCU() {
+  camera.waitForVsync();
+  camera.ignoreVerticalPadding();
+  int16_t image[256]={};
+  for (uint16_t y = 0; y < lineCount; y++) {
+    lineBufferSendByte = &lineBuffer[0];
+    camera.ignoreHorizontalPaddingLeft();
+    
+    uint16_t x = 0;
+    while ( x < lineBufferLength) {
+      camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
+      camera.readPixelByte(lineBuffer[x]);
+      image[16*(y/7)+x/7] += (int16_t)lineBuffer[x];    
+      camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
+      x++;
+
+      camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
+      camera.readPixelByte(lineBuffer[x]);
+      image[16*(y/7)+x/7] += (int16_t)lineBuffer[x];    
+
+      camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
+      x++;
+    }
+    camera.ignoreHorizontalPaddingRight();
+  }
+  for (uint16_t y = 0; y < 256; y++) {
+    image[y] = image[y]/49;
+  }
+
+  for (uint16_t y = 0; y < 256; y++) {
+    waitForPreviousUartByteToBeSent();
+    UDR0 = image[y];
+  }
+}
 
 void processGrayscaleFrameBuffered() {
   camera.waitForVsync();
