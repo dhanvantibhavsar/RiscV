@@ -4,6 +4,7 @@
 - Duration :- 04 May 2024 to 11 June 2024
 
 ## Implementation Video
+[![implementation Video](./BitNetMCU/images/final_real_time_implementation.mp4)](./BitNetMCU/images/final_real_time_implementation.mp4)
 <video src="./BitNetMCU/images/final_real_time_implementation.mp4" controls ></video>
 
 ## Content
