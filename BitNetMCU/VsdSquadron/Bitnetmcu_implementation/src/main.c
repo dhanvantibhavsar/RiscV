@@ -21,6 +21,19 @@
 #define SEG7_PIN_A GPIO_Pin_1 // pd1
 #define SEG7_PIN_B GPIO_Pin_6 // pd6
 
+void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+
+/***********************
+ * @fn      USART1_IRQHandler
+ *
+ * @brief   This function handles USART3 global interrupt request.
+ *
+ * @return  none
+ */
+ int8_t RxBuffer1[256];
+ int RxCnt1 = 0;
+ int RxFinish = 0;
+
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void Delay_Init(void);
@@ -49,7 +62,52 @@ const uint8_t label_1 = 1;
 const int8_t input_data_2[256] = {-21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -16.0, 11.0, 49.0, 48.0, 0.0, -20.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -20.0, -5.0, 41.0, 80.0, 62.0, 56.0, 70.0, 0.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -18.0, 10.0, 76.0, 58.0, 3.0, -18.0, -14.0, 70.0, 24.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -19.0, 28.0, 94.0, 29.0, -15.0, -21.0, -21.0, 1.0, 99.0, 47.0, -20.0, -21.0, -21.0, -21.0, -21.0, -21.0, 7.0, 87.0, 29.0, -19.0, -21.0, -20.0, -9.0, 65.0, 90.0, 7.0, -21.0, -21.0, -21.0, -21.0, -21.0, -19.0, 55.0, 67.0, -14.0, -21.0, -20.0, -4.0, 77.0, 118.0, 30.0, -19.0, -21.0, -21.0, -21.0, -21.0, -21.0, -17.0, 68.0, 33.0, -12.0, -0.0, 29.0, 69.0, 127.0, 72.0, -12.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -18.0, 55.0, 91.0, 84.0, 75.0, 38.0, 51.0, 111.0, 8.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -11.0, 16.0, 14.0, -8.0, -13.0, 62.0, 65.0, -18.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -3.0, 84.0, 18.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, 14.0, 68.0, -13.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, 8.0, 39.0, -17.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -20.0, -18.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0, -21.0}; const uint8_t label_2 = 9;
 const int8_t input_data_3[256] = {-20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -13.0, -15.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -6.0, 41.0, 78.0, 38.0, -18.0, -20.0, -20.0, -20.0, -20.0, -17.0, -17.0, -20.0, -20.0, -20.0, -20.0, -11.0, 67.0, 109.0, 63.0, 6.0, -20.0, -20.0, -20.0, -20.0, -8.0, 48.0, 50.0, -8.0, -20.0, -20.0, -20.0, 2.0, 108.0, 65.0, -14.0, -20.0, -20.0, -20.0, -20.0, -12.0, 59.0, 114.0, 89.0, 4.0, -20.0, -20.0, -20.0, 10.0, 114.0, 27.0, -20.0, -20.0, -20.0, -20.0, -20.0, 36.0, 122.0, 65.0, -14.0, -20.0, -20.0, -20.0, -20.0, -2.0, 96.0, 55.0, -13.0, -20.0, -20.0, -20.0, -12.0, 89.0, 114.0, 16.0, -20.0, -20.0, -20.0, -20.0, -20.0, -17.0, 43.0, 100.0, 46.0, -5.0, -15.0, -18.0, 6.0, 115.0, 84.0, -9.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -14.0, 45.0, 115.0, 100.0, 78.0, 50.0, 66.0, 127.0, 53.0, -17.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -13.0, 28.0, 76.0, 91.0, 104.0, 127.0, 122.0, 28.0, -18.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -19.0, -16.0, -14.0, -1.0, 71.0, 114.0, 8.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, 19.0, 112.0, 39.0, -13.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -11.0, 70.0, 89.0, 19.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -18.0, -6.0, -18.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0};
 const uint8_t label_3 = 4;
+void USART_Initialize(uint32_t baudrate) {
+    USART_InitTypeDef USART_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
 
+    // Enable GPIOA and USART1 clock
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE);
+
+    // Configure USART1 Tx (PA.09) as alternate function push-pull
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+    // Configure USART1 Rx (PA.10) as input floating
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+    // USART1 configuration
+    USART_InitStructure.USART_BaudRate = baudrate;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+
+    // Apply USART1 configuration
+    USART_Init(USART1, &USART_InitStructure);
+    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+    // Enable USART1
+    USART_Cmd(USART1, ENABLE);
+}
+
+void USART1_IRQHandler(void)
+{
+   
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+    {
+           RxBuffer1[RxCnt1++] = USART_ReceiveData(USART1);
+           if(RxCnt1 >= 256){
+            RxCnt1 = 0;
+            RxFinish=1;
+           }
+        }
+    
+}
 void BitMnistInference(const int8_t *input, const uint8_t label, const uint8_t sample) {
     int32_t layer_out[MAX_N_ACTIVATIONS];
     int8_t layer_in[MAX_N_ACTIVATIONS];
@@ -93,6 +151,7 @@ void displayDigit(uint8_t digit) {
     GPIO_WriteBit(SEG7_PORTD, SEG7_PIN_G, (segments & 0b01000000) ? GPIO_PIN_SET : GPIO_PIN_RESET);
   
 }
+
 int main()
 {
 	SystemInit();
@@ -100,6 +159,7 @@ int main()
 	SystemCoreClockUpdate();
 	Delay_Init();
 	USART_Printf_Init(115200);
+    USART_Initialize(115200);
 	GPIO_InitTypeDef GPIO_InitStructure = {0};
 	// Configure GPIO pins for segments
     GPIO_InitStructure.GPIO_Pin = SEG7_PIN_B | SEG7_PIN_C| SEG7_PIN_D | SEG7_PIN_E| SEG7_PIN_G|SEG7_PIN_F|SEG7_PIN_A;
@@ -120,24 +180,30 @@ int main()
     uint8_t A = 0;
 	while(1)
 	{
+        if(RxFinish){
+             BitMnistInference(RxBuffer1, 1,2);	
+		     Delay_Ms(2000);
+            RxFinish = 0;
+
+        }
 		// for(uint8_t i =0; i<10;i++){
 		// 	displayDigit(i);
 		// 	Delay_Ms(2000);
 		// }
-		GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
-        Delay_Ms(1000);
-		A^=1;
-        GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
-        Delay_Ms(1000);
-		printf("Starting MNIST inference...\n");
-		BitMnistInference(input_data_0, label_0,1);	
-		Delay_Ms(2000);
-		BitMnistInference(input_data_1, label_1,2);	
-		Delay_Ms(2000);
-		BitMnistInference(input_data_2, label_2,3);	
-		Delay_Ms(2000);
-		BitMnistInference(input_data_3, label_3,4);	
-		Delay_Ms(2000);
+		// GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
+        // Delay_Ms(1000);
+		// A^=1;
+        // GPIO_WriteBit(SEG7_PORTC, SEG7_PIN_A, A);
+        // Delay_Ms(1000);
+		// printf("Starting MNIST inference...\n");
+		// BitMnistInference(input_data_0, label_0,1);	
+		// Delay_Ms(2000);
+		// BitMnistInference(input_data_1, label_1,2);	
+		// Delay_Ms(2000);
+		// BitMnistInference(input_data_2, label_2,3);	
+		// Delay_Ms(2000);
+		// BitMnistInference(input_data_3, label_3,4);	
+		// Delay_Ms(2000);
 	}
 }
 void NMI_Handler(void) {}

@@ -254,10 +254,10 @@ CameraOV7670 camera(CameraOV7670::RESOLUTION_VGA_640x480, CameraOV7670::PIXEL_YU
 #endif
 
 #if UART_MODE==18
-const uint16_t lineLength = 160;
-const uint16_t lineCount = 120;
+const uint16_t lineLength = 16;
+const uint16_t lineCount = 16;
 const uint32_t baud  = 115200;
-const ProcessFrameData processFrameData = processGrayscaleFrame16x16;
+const ProcessFrameData processFrameData = processGrayscaleFrameBuffered;
 const uint16_t lineBufferLength = lineLength;
 const bool isSendWhileBuffering = true;
 const uint8_t uartPixelFormat = UART_PIXEL_FORMAT_GRAYSCALE;
@@ -344,6 +344,50 @@ void processFrame() {
 
 
 void processGrayscaleFrameBuffered() {
+  camera.waitForVsync();
+  commandDebugPrint("Vsync");
+
+  camera.ignoreVerticalPadding();
+
+  for (uint16_t y = 0; y < lineCount; y++) {
+    lineBufferSendByte = &lineBuffer[0];
+    camera.ignoreHorizontalPaddingLeft();
+
+    uint16_t x = 0;
+    while ( x < lineBufferLength) {
+      camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
+      camera.readPixelByte(lineBuffer[x]);
+      lineBuffer[x] = formatPixelByteGrayscaleFirst(lineBuffer[x]);
+
+      camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
+      if (isSendWhileBuffering) {
+        processNextGrayscalePixelByteInBuffer();
+      }
+      x++;
+
+      camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
+      camera.readPixelByte(lineBuffer[x]);
+      lineBuffer[x] = formatPixelByteGrayscaleSecond(lineBuffer[x]);
+
+      camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
+      if (isSendWhileBuffering) {
+        processNextGrayscalePixelByteInBuffer();
+      }
+      x++;
+    }
+    camera.ignoreHorizontalPaddingRight();
+
+    // Debug info to get some feedback how mutch data was processed during line read.
+    processedByteCountDuringCameraRead = lineBufferSendByte - (&lineBuffer[0]);
+
+    // Send rest of the line
+    while (lineBufferSendByte < &lineBuffer[lineLength]) {
+      processNextGrayscalePixelByteInBuffer();
+    }
+  };
+}
+
+void processGrayscaleFrameBufferedWithBox() {
   camera.waitForVsync();
   commandDebugPrint("Vsync");
 
