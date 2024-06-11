@@ -3,6 +3,9 @@
 - Created By:- Dhanvanti Bhavsar
 - Duration :- 04 May 2024 to 11 June 2024
 
+## Implementation Video
+<video src="./BitNetMCU/images/final_real_time_implementation.mp4" controls ></video>
+
 ## Content
 1. [Install RISCV toochain for RISC-V development](Task1)
 2. [Identify various RISCV instruction types (R,I,S,B,U,J) ](Task2)
@@ -12,4 +15,5 @@
 
 **Please Check underlying Readme.md files for further details of every task**
 
-![Implementation Video](./BitNetMCU/images/final_real_time_implementation.mp4)
+
+
