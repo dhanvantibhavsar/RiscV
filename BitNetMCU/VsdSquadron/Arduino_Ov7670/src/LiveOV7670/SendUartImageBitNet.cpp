@@ -8,6 +8,9 @@
 #include "Arduino.h"
 #include "CameraOV7670.h"
 #define DisplayMode 1
+// #define DisplayMode 0
+// DisplayMode = 0 for Visualizing image using ArduImageCapture 1
+// DisplayMode = 1 for sending data to VSDSquadron Mini
 
 
 // select resolution and communication speed:

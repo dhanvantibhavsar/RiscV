@@ -1,5 +1,7 @@
 # Real Time Implementation of BitNetMCU
+- This implementation has been forked and edited to support VSDSquadron Real Time implementation from [BitNetMCU: High Accuracy Low-Bit Quantized Neural Networks on a low-end Microcontroller](https://github.com/cpldcpu/BitNetMCU)
 
+**Due to Low flash space available on VSDSquadron Mini, we had to reduce number of layers in neural network as compared to demo implementation**
 ## Content
 1. [Overview](#Overview)
 2. [Components Required](#components)
@@ -10,7 +12,19 @@
     2. [Exporting Model weights to C file for using with VSD](#exporting-model-weights-to-c-file-for-using-with-vsd)
     3. [Testing Output prediction of model ](#testing-output-prediction-of-model)
     4. [Generating dll file for inference](#generating-dll-file-for-inference)
-    5. [Uploading BitNetMCU to VSDSquadron and realtime implementation](./VsdSquadron/readme.md)
+6. [Uploading BitNetMCU to VSDSquadron and realtime implementation](./VsdSquadron/readme.md)
+    1. [Overview](#overview)
+    2. [ToolChain Installation](#toolchain-installation)
+    3. [Demo implementation with test images stored on board while flashing](#demo-implementation-with-test-images-stored-on-board-while-flashing)
+        1. [Implementation](#implementation)
+        2. [Result](#result)
+    4. [Real Time Implementation with USART communication with Arduino and OV7670 integration](#real-time-implementation-with-usart-communication-with-arduino-and-ov7670-integration)
+        1. [State Diagram](#state-diagram)
+        2. [Connection Diagram](#connection-diagram)
+        3. [Installation](#installation)
+        4. [Camera Capture and Testing](#camera-capture-and-testing)
+        5. [Image Capturing, Comperssion and sending over Uart](#image-capturing-comperssion-and-sending-over-uart)
+        6. [VSDImplementation](#vsdimplementation)
 
 ## Overview
 This is a simple implementation of a low-bit quntized neural network on Risc-V microcontroller.

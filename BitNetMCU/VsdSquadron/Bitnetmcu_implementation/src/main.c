@@ -13,6 +13,8 @@
 #include <stdio.h>
 
 #define Demo 0 
+// #define Demo 1
+
 // Demo = 0 for real time implementatioin with camera 1  
 // Demo = 1 for Demo with test images 
 #define SEG7_PORTD GPIOD
@@ -20,10 +22,10 @@
 #define SEG7_PIN_E GPIO_Pin_2 //pd2
 #define SEG7_PIN_D GPIO_Pin_3 // pd3
 #define SEG7_PIN_C GPIO_Pin_4 //pd4
-#define SEG7_PIN_G GPIO_Pin_5 // pd0
+#define SEG7_PIN_G GPIO_Pin_0 // pd0
 #define SEG7_PIN_F GPIO_Pin_0 // pc0
 #define SEG7_PIN_A GPIO_Pin_1 // pc1
-#define SEG7_PIN_B GPIO_Pin_6 // pd1
+#define SEG7_PIN_B GPIO_Pin_1 // pd1
 
 void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
