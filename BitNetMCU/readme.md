@@ -86,7 +86,7 @@ No hardware connections are required for BitNetMCU only we have to connect VSD s
 The following connections are required for BitNetMCU real time implementation:
 
 
-![circuit diagram](./images/circuitdiagram.jpeg)
+![circuit diagram](./images/circuitdiagram.png)
 
 ## BitNetMcu Implementation
 
