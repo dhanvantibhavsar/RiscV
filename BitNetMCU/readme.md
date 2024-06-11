@@ -1,4 +1,17 @@
 # Real Time Implementation of BitNetMCU
+
+## Content
+1. [Overview](#Overview)
+2. [Components Required](#components)
+3. [Project Flow](#flow-of-the-project)
+4. [Circuit Diagram](#circuit-connection-for-bitnetmcu-real-time)
+5. [BitNetMcu Implementation](#bitnetmcu-implementation-1)
+    1. [Training Neural Network model](#training-neural-network-model)
+    2. [Exporting Model weights to C file for using with VSD](#exporting-model-weights-to-c-file-for-using-with-vsd)
+    3. [Testing Output prediction of model ](#testing-output-prediction-of-model)
+    4. [Generating dll file for inference](#generating-dll-file-for-inference)
+    5. [Uploading BitNetMCU to VSDSquadron and realtime implementation](./VsdSquadron/readme.md)
+
 ## Overview
 This is a simple implementation of a low-bit quntized neural network on Risc-V microcontroller.
 The project is based on the Risc-V microcontroller and MNIST dataset.
@@ -49,6 +62,7 @@ The MNIST dataset is split into two subsets:
 
 The example showcases the variety and complexity of the handwritten digits in the MNIST dataset, highlighting the importance of a diverse dataset for training robust image classification models.
 
+## Components
 ### Components Required for BitNetMCU
 - VSD Squadron Mini
 - USB Cable
@@ -64,7 +78,7 @@ The example showcases the variety and complexity of the handwritten digits in th
 - Breadboard
 - push button
 
-### Flow of the project
+## Flow of the project
 #### BitNetMCU Implementation
 - Configuration
 - Model Training
@@ -80,7 +94,7 @@ The example showcases the variety and complexity of the handwritten digits in th
 - Inferring detected digits using the model on the VSD Squadron Mini
 - Displaying the output on the 7 segment display
 
-### Circuit Connection for BitNetMCU
+## Circuit Connection for BitNetMCU
 No hardware connections are required for BitNetMCU only we have to connect VSD squadron with computer using USB cable.
 ### Circuit Connection for BitNetMCU real time
 The following connections are required for BitNetMCU real time implementation:
@@ -147,14 +161,14 @@ Edit [trainingparameter.yaml](./trainingparameters.yaml) file and update configu
 
 #### Model Parameters
 
-- **network_width1:** `64`
-  - Width of the first layer in the neural network, indicating that the first layer contains 64 units or neurons.
+- **network_width1:** `32`
+  - Width of the first layer in the neural network, indicating that the first layer contains 32 units or neurons.
 
-- **network_width2:** `64`
-  - Width of the second layer in the neural network, with 64 units or neurons.
+- **network_width2:** `16`
+  - Width of the second layer in the neural network, with 16 units or neurons.
 
-- **network_width3:** `64`
-  - Width of the third layer in the neural network, with 64 units or neurons.
+- **network_width3:** `16`
+  - Width of the third layer in the neural network, with 16 units or neurons.
 
 #### Name
 
@@ -165,9 +179,59 @@ Edit [trainingparameter.yaml](./trainingparameters.yaml) file and update configu
 
 This configuration script sets the parameters for a machine learning experiment involving 4-bit symmetric quantization with RMS normalization and per-tensor weight scaling. The model will be trained using a batch size of 128 over 60 epochs with a cosine annealing learning rate scheduler starting at 0.001. Data augmentation includes rotations up to 10 degrees. The neural network architecture consists of three layers, each with 64 units. The run is tagged with the prefix "opt_" to facilitate easy identification.
 
+### Training Neural Network model
+- Execute training of model using training.py file
+  1. Install python (We used python version 3.12.3 for this demo)
+  2. cd into BitNetMCU folder 
+  3. Create virtual envioronment using following command
+  ```
+  python -m venv bitnetenv
+  ```
+  4. Activate virtual envioronment using following command
+  ```
+  ./bitnetenv/Scripts/activate
+  ```
+  5. Install required dependencies in virtual envioronment using following command
+  ```
+  pip install -r requirements.txt
+  ```
+  6. Start traing by executing following command
+  ```
+  python training.py
+  ```
+![training start](images\training_start.jpeg)
+![training end](images\training_end.jpeg)
 
+- Once training ends trained model will be saved in modeldata folder
 
+### Exporting Model weights to C file for using with VSD 
+- Export weights of model using exportquant.py file\
+use following command
+```
+python exportquant.py
+``` 
+- This will model weights in **BitNetMCU_model.h** file
+- We Tried changing multiple model parameters via **trainingparameters.yaml** file and saved to parameters as files with network sizes added
 
+### Testing Output prediction of model 
+- Here we try to provide multiple 16x16 images as input to the model and test the generated predictions
+  1. using gcc compile **BitNetMCU_MNIST_test.c** file
+    ```
+    gcc BitNetMCU_MNIST_test.c -o testoutput.o
+    ```
+  2. Execute the compiled file 
+    ```
+    ./testoutput.o
+    ```
+  - You should be able to see the labels and predictions generated for the test images
+  ![test output of model](images/test_output.jpeg)
 
+### Generating dll file for inference
+1. install Make 
+2. run make command
+```
+make
+```
 
-
+## Uploading BitNetMCU to VSDSquadron and realtime implementation
+- [All details can be found in VSDSquadron folder](./VsdSquadron/readme.md)
