@@ -7,6 +7,7 @@
 #if EXAMPLE == 5
 #include "Arduino.h"
 #include "CameraOV7670.h"
+#define DisplayMode 1
 
 
 // select resolution and communication speed:
@@ -343,7 +344,7 @@ void sendBlankFrame(uint16_t color) {
 
 // this is called in Arduino loop() function
 void processFrame() {
-  if (displayMode==0){
+  if (displayMode==1){
   processedByteCountDuringCameraRead = 0;
   commandStartNewFrame(uartPixelFormat);
   noInterrupts();
@@ -352,7 +353,7 @@ void processFrame() {
   frameCounter++;
   commandDebugPrint("Frame " + String(frameCounter)/* + " " + String(processedByteCountDuringCameraRead)*/);
   }
-  if (displayMode==1){
+  if (displayMode==0){
     processFrameData();
   }
   //commandDebugPrint("Frame " + String(frameCounter, 16)); // send number in hexadecimal
@@ -392,6 +393,14 @@ void processGrayscaleFrameBitNetMCU() {
     waitForPreviousUartByteToBeSent();
     UDR0 = image[y];
   }
+  // for (uint16_t y = 0; y < 112; y++) {
+  //   for (uint16_t x = 0; x < 112; x++) {
+  //   waitForPreviousUartByteToBeSent();
+  //   UDR0 = image[16*y/7+x/7];
+    
+  // }
+    
+  // }
 }
 
 void processGrayscaleFrameBuffered() {
@@ -760,7 +769,7 @@ void commandStartNewFrame(uint8_t pixelFormat) {
 
   waitForPreviousUartByteToBeSent();
   UDR0 = checksum;
-  commandDebugPrint("Ankit");
+  commandDebugPrint("dhanvanti");
 }
 
 
