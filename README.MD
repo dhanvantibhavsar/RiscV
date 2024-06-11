@@ -11,3 +11,5 @@
 
 
 **Please Check underlying Readme.md files for further details of every task**
+
+![Implementation Video](./BitNetMCU/images/final_real_time_implementation.mp4)
