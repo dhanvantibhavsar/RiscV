@@ -344,7 +344,7 @@ void sendBlankFrame(uint16_t color) {
 
 // this is called in Arduino loop() function
 void processFrame() {
-  if (displayMode==1){
+  if (displayMode==0){
   processedByteCountDuringCameraRead = 0;
   commandStartNewFrame(uartPixelFormat);
   noInterrupts();
@@ -353,7 +353,7 @@ void processFrame() {
   frameCounter++;
   commandDebugPrint("Frame " + String(frameCounter)/* + " " + String(processedByteCountDuringCameraRead)*/);
   }
-  if (displayMode==0){
+  if (displayMode==1){
     processFrameData();
   }
   //commandDebugPrint("Frame " + String(frameCounter, 16)); // send number in hexadecimal

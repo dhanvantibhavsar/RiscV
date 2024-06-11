@@ -1,7 +1,7 @@
 // change setup.h to switch between buffered and pixel-by-pixel processing
 #include "Arduino.h"
 #include "./LiveOV7670/setup.h"
-// #define DisplayMode 1
+ // #define DisplayMode 0
 // DisplayMode = 0 for Visualizing image using ArduImageCapture 1
 // DisplayMode = 1 for sending data to VSDSquadron Mini
 
