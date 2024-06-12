@@ -135,3 +135,4 @@ this will put the code to process data being sent over UART and generate predict
 6. Press Push button and data Prediction should be updated on the 7 Segment Display
 
 [![Final Implementation Video](../images/final_real_time_implementation.mp4)](../images/final_real_time_implementation.mp4)
+[![Final Implementation Video with Explaination](../images/final_implementration_with_explaination.mp4)](../images/final_implementration_with_explaination.mp4)

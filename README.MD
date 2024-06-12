@@ -3,9 +3,25 @@
 - Created By:- Dhanvanti Bhavsar
 - Duration :- 04 May 2024 to 11 June 2024
 
-## Implementation Video
-[![implementation Video](./BitNetMCU/images/final_real_time_implementation.mp4)](./BitNetMCU/images/final_real_time_implementation.mp4)
-<video src="./BitNetMCU/images/final_real_time_implementation.mp4" controls ></video>
+## Implementation Video With Explaiination
+[![implementation Video](./BitNetMCU/images/final_implementration_with_explaination.mp4)](./BitNetMCU/images/final_implementration_with_explaination.mp4)
+<video src="./BitNetMCU/images/final_implementration_with_explaination.mp4" controls ></video>
+
+## Intermediate Video Implementations
+### Demo implementation with test images stored on board while flashing
+- You should be able to see Image recognised image prediction being displayed on the 7 Segment Display
+- A Repeating pattern of 7 - 1 - 9 - 4 should be displayed on  7 Segment Display
+- Documentation at [Demo implementation with test images stored on board while flashing](./BitNetMCU/VsdSquadron/readme.md#demo-implementation-with-test-images-stored-on-board-while-flashing))
+- [![Implementation Result](../images/basic_implementation.mp4)](../images/basic_implementation.mp4) \
+**Please not that the segment A of 7 Segment Display was blown out while testing**
+
+### Camera Capture Testing to view camera output with resolution 112x112
+- Documentation at [Camera Capture Testing](./BitNetMCU/VsdSquadron/readme.md#camera-capture-and-testing)
+[![Image Capturing and adjustment in process](../images/camera_capture_and_testing.mp4)](../images/camera_capture_and_testing.mp4)
+
+### Image Capturing, Comperssion to 16x16 and sending over Uart
+- Documentation at [Image Capturing, Comperssion and sending over Uart](#image-capturing-comperssion-and-sending-over-uart)
+![UART Data Visualization using RealTerm](../images/realterm_data_visualization.jpeg)
 
 ## Content
 1. [Install RISCV toochain for RISC-V development](Task1)
