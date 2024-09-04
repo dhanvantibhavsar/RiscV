@@ -49,10 +49,7 @@ bool CameraOV7670Registers::setRegister(uint8_t addr, uint8_t val) {
   Wire.beginTransmission(i2cAddress);
   Wire.write(addr);
   Wire.write(val);
-  Serial.print(addr);
-  Serial.println(val);
   return Wire.endTransmission() == 0;
-
 }
 
 
