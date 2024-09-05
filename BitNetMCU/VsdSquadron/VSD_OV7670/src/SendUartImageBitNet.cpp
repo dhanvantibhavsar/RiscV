@@ -149,11 +149,11 @@ void processGrayscaleFrameBitNetMCU() {
       x++;
     }
     camera.ignoreHorizontalPaddingRight();
-    if(y%7==0) {
+    if(y%4==0) {
       for (uint16_t i = 0; i < 112; i++) {
         waitForPreviousUartByteToBeSent();
         USART1->DATAR = lineBuffer[i];
-        i=i+6;
+        i=i+3;
   }
     }
 

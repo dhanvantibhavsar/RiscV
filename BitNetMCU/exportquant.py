@@ -156,7 +156,7 @@ def plot_statistics(quantized_model):
     first_layer_weights = np.array(quantized_model.quantized_model[0]['quantized_weights'])
 
     # Step 2: Reshape the weights into a 16x16 grid
-    reshaped_weights = first_layer_weights.reshape(16, 16, -1)
+    reshaped_weights = first_layer_weights.reshape(28, 28, -1)
     print(reshaped_weights.shape)
     # Step 3: Calculate the variance of each channel
     variances = np.var(reshaped_weights, axis=-1)
@@ -186,7 +186,7 @@ def plot_weights(quantized_model):
     first_layer_weights = np.array(quantized_model.quantized_model[0]['quantized_weights'])
 
     # Step 2: Reshape the weights into a 16x16 grid for each output channel
-    reshaped_weights = first_layer_weights.reshape(-1, 16, 16)
+    reshaped_weights = first_layer_weights.reshape(-1, 28, 28)
 
     # Calculate the number of output channels
     num_channels = reshaped_weights.shape[0]
@@ -254,7 +254,7 @@ if __name__ == '__main__':
 
     # Load the MNIST dataset
     transform = transforms.Compose([
-        transforms.Resize((16, 16)),  # Resize images to 16x16
+        transforms.Resize((28, 28)),  # Resize images to 16x16
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])

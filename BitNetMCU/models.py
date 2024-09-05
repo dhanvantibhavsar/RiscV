@@ -18,7 +18,7 @@ class FCMNIST(nn.Module):
         self.network_width3 = network_width3
         self.quantscale = quantscale
 
-        self.fc1 = BitLinear(1* 1 *16 *16, network_width1,QuantType=QuantType,NormType=NormType, WScale=WScale, quantscale=quantscale)
+        self.fc1 = BitLinear(1* 1 *28 *28, network_width1,QuantType=QuantType,NormType=NormType, WScale=WScale, quantscale=quantscale)
         self.fc2 = BitLinear(network_width1, network_width2,QuantType=QuantType,NormType=NormType, WScale=WScale , quantscale=quantscale )
         if network_width3>0:
             self.fc3 = BitLinear(network_width2, network_width3,QuantType=QuantType,NormType=NormType, WScale=WScale , quantscale=quantscale)

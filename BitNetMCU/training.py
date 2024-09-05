@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     # Load the MNIST dataset
     transform = transforms.Compose([
-        transforms.Resize((16, 16)),  # Resize images to 16x16
+        transforms.Resize((28, 28)),  # Resize images to 16x16
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
@@ -175,7 +175,7 @@ if __name__ == '__main__':
             # 10,10 seems to be best combination
             transforms.RandomRotation(degrees=hyperparameters["rotation1"]),  
             transforms.RandomAffine(degrees=hyperparameters["rotation2"], translate=(0.1, 0.1), scale=(0.9, 1.1)),   # both are needed for best results.
-            transforms.Resize((16, 16)),  # Resize images to 16x16
+            transforms.Resize((28, 28)),  # Resize images to 16x16
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))
         ])
