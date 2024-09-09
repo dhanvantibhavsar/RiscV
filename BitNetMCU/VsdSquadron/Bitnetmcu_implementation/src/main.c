@@ -7,7 +7,7 @@
 
 #include "../data/BitNetMCU_inference.c"
 // #include "BitNetMCU_model_1k.h"
-#include "../data/BitNetMCU_model28x28.h"
+#include "../data/BitNetMCU_model28.h"
 // #include "BitNetMCU_model_12k_FP130.h"
 #include <stdio.h>
 
@@ -235,10 +235,10 @@ void main()
 
     int i;
 
-    for(i=0; i<=9;i++){
-       displayDigit(i);
-       Delay_Ms(500);
-    }
+    // for(i=0; i<=9;i++){
+    //    displayDigit(i);
+    //    Delay_Ms(500);
+    // }
 
 
 
@@ -250,6 +250,33 @@ void main()
         // printf("%d",frameCounter);
         
         if(RxFinish==1){
+            // int sum= 0;
+            // for(int i=0;i<256; i++){
+            //     sum+=(uint8_t)(RxBuffer1[i]+128);
+            // }
+            // sum/=256;
+            // printf("%d%d",0x00,4);
+            while ((USART1->STATR & (uint16_t)0x0080) == (uint16_t)0);
+            USART1->DATAR = 0x00;
+            while ((USART1->STATR & (uint16_t)0x0080) == (uint16_t)0);
+
+            USART1->DATAR = 0x04;
+// 
+            for(int i=0;i<784; i++){
+                if(RxBuffer1[i]>=0 && RxBuffer1[i]<64){
+                    RxBuffer1[i]=1;
+                } else{
+                    RxBuffer1[i]=0;
+                }
+                while ((USART1->STATR & (uint16_t)0x0080) == (uint16_t)0);
+                USART1->DATAR = RxBuffer1[i];
+                
+                //printf("%x",RxBuffer1[i]);
+                // if(i%28==27){
+                //     printf("\n");
+                // }
+                // sum+=RxBuffer1[i];
+            }
             RxFinish = 0;
             capturing = 0;
             BitMnistInference(RxBuffer1, 10, ++frameCounter);

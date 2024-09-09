@@ -17,7 +17,17 @@ import yaml
 # cpldcpu 2024-03 
 # fork by Dhanvanti Bhavsar 2024-06-07
 #----------------------------------------------
+class ToBinary:
+    def __init__(self, threshold=0.5):
+        self.threshold = threshold
+    
+    def __call__(self, img):
+        # Apply the threshold and convert to binary (0 or 1)
+        # print(type(img))
+        # print((img>self.threshold).float())
+        return (img > self.threshold).float()
 
+    
 def create_run_name(hyperparameters):
     runname = hyperparameters["runtag"] + hyperparameters["scheduler"] + '_lr' + str(hyperparameters["learning_rate"]) + ('_Aug' if hyperparameters["augmentation"] else '') + '_BitMnist_' + hyperparameters["WScale"] + "_" +hyperparameters["QuantType"] + "_" + hyperparameters["NormType"] + "_width" + str(hyperparameters["network_width1"]) + "_" + str(hyperparameters["network_width2"]) + "_" + str(hyperparameters["network_width3"])  + "_bs" + str(hyperparameters["batch_size"]) + "_epochs" + str(hyperparameters["num_epochs"])
     hyperparameters["runname"] = runname
@@ -161,9 +171,10 @@ if __name__ == '__main__':
 
     # Load the MNIST dataset
     transform = transforms.Compose([
-        transforms.Resize((28, 28)),  # Resize images to 16x16
+        # transforms.Resize((28, 28)),  # Resize images to 16x16
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        transforms.Normalize((0.1307,), (0.3081,)),
+        ToBinary(threshold=0.5)
     ])
 
     train_data = datasets.MNIST(root='data', train=True, transform=transform, download=True)
@@ -175,9 +186,10 @@ if __name__ == '__main__':
             # 10,10 seems to be best combination
             transforms.RandomRotation(degrees=hyperparameters["rotation1"]),  
             transforms.RandomAffine(degrees=hyperparameters["rotation2"], translate=(0.1, 0.1), scale=(0.9, 1.1)),   # both are needed for best results.
-            transforms.Resize((28, 28)),  # Resize images to 16x16
+            # transforms.Resize((28, 28)),  # Resize images to 16x16
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
+            transforms.Normalize((0.1307,), (0.3081,)),
+            ToBinary(threshold=0.5)
         ])
 
         augmented_train_data = datasets.MNIST(root='data', train=True, transform=augmented_transform)

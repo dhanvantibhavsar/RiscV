@@ -231,6 +231,16 @@ def plot_weight_histograms(quantized_model):
     plt.tight_layout()  
     plt.show(block=False)
 
+class ToBinary:
+    def __init__(self, threshold=0.5):
+        self.threshold = threshold
+    
+    def __call__(self, img):
+        # Apply the threshold and convert to binary (0 or 1)
+        # print(type(img))
+        # print((img>self.threshold).float())
+        return (img > self.threshold).float()
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training script')
     parser.add_argument('--params', type=str, help='Name of the parameter file', default='trainingparameters.yaml')
@@ -254,9 +264,10 @@ if __name__ == '__main__':
 
     # Load the MNIST dataset
     transform = transforms.Compose([
-        transforms.Resize((28, 28)),  # Resize images to 16x16
+        # transforms.Resize((28, 28)),  # Resize images to 16x16
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        transforms.Normalize((0.1307,), (0.3081,)),
+        ToBinary(0.5)
     ])
 
     train_data = datasets.MNIST(root='data', train=True, transform=transform, download=True)
@@ -348,7 +359,7 @@ if __name__ == '__main__':
     print("Exporting model to header file")
     # export the quantized model to a header file
     # export_to_hfile(quantized_model, f'{exportfolder}/{runname}.h')
-    export_to_hfile(quantized_model, f'BitNetMCU_model.h',runname)
+    export_to_hfile(quantized_model, f'BitNetMCU_model28.h',runname)
     
     if showplots:
         plt.show()
