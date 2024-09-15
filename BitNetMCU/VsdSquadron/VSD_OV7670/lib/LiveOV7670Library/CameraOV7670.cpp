@@ -26,6 +26,9 @@ bool CameraOV7670::setUpCamera() {
       default:
       case PIXEL_YUV422:
         registers.setRegisters(CameraOV7670Registers::regsYUV422);
+        // setManualContrastCenter(0x02);
+        // setContrast(0xff);
+        // setBrightness(0x11);
         break;
     }
 
