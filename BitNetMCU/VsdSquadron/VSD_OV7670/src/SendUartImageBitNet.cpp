@@ -1,8 +1,8 @@
 
 #include "Arduino.h"
 #include "CameraOV7670.h"
-// #define DisplayMode 1
-#define DisplayMode 0
+#define DisplayMode 1
+// #define DisplayMode 0
 const int displayMode=DisplayMode;
 // DisplayMode = 0 for Visualizing image using ArduImageCapture 1
 // DisplayMode = 1 for sending data to VSDSquadron Mini
@@ -74,7 +74,7 @@ inline uint8_t formatPixelByteGrayscaleFirst(uint8_t byte) __attribute__((always
 inline uint8_t formatPixelByteGrayscaleSecond(uint8_t byte) __attribute__((always_inline));
 inline void waitForPreviousUartByteToBeSent() __attribute__((always_inline));
 inline bool isUartReady() __attribute__((always_inline));
-
+void processGrayscaleFrameBitNetMCU2();
 
 
 // this is called in Arduino setup() function
@@ -110,6 +110,7 @@ void processFrame() {
   }
   if (displayMode==1){
     processFrameData();
+    processGrayscaleFrameBitNetMCU2();
   }
   //commandDebugPrint("Frame " + String(frameCounter, 16)); // send number in hexadecimal
 }
@@ -120,11 +121,11 @@ void processGrayscaleFrameBitNetMCU() {
   USART1->DATAR = 0x00; // New command
 
   waitForPreviousUartByteToBeSent();
-  USART1->DATAR = 4; // Command length
+  USART1->DATAR = 6; // Command length
 
   camera.waitForVsync();
   camera.ignoreVerticalPadding();
-  uint16_t image[256]={};
+  // uint16_t image[256]={};
   for (uint16_t y = 0; y < lineCount; y++) {
     lineBufferSendByte = &lineBuffer[0];
     camera.ignoreHorizontalPaddingLeft();
@@ -133,35 +134,128 @@ void processGrayscaleFrameBitNetMCU() {
     while ( x < lineBufferLength) {
       camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
       camera.readPixelByte(lineBuffer[x]);
-      lineBuffer[x] = formatPixelByteGrayscaleFirst(lineBuffer[x]);
+      // lineBuffer[x] = formatPixelByteGrayscaleFirst(lineBuffer[x]);
       
-      image[(16*(int)(y/7))+(int)(x/7)] += lineBuffer[x];    
+      // image[(16*(int)(y/7))+(int)(x/7)] += lineBuffer[x];    
       camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
       x++;
 
       camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
       camera.readPixelByte(lineBuffer[x]);
-      lineBuffer[x] = formatPixelByteGrayscaleSecond(lineBuffer[x]);
+      // lineBuffer[x] = formatPixelByteGrayscaleFirst(lineBuffer[x]);
 
-      image[(16*(int)(y/7))+(int)(x/7)] += lineBuffer[x];    
+      // image[(16*(int)(y/7))+(int)(x/7)] += lineBuffer[x];    
 
       camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
       x++;
     }
     camera.ignoreHorizontalPaddingRight();
-    if(y%7==0) {
-      for (uint16_t i = 0; i < 112; i++) {
+    if(y%1==0) {
+      for (int i = 0; i < 112; i++) {
         waitForPreviousUartByteToBeSent();
         USART1->DATAR = lineBuffer[i];
-        i=i+6;
+        // i=i+3;
   }
     }
 
   }
   
-  for (uint16_t y = 0; y < 256; y++) {
-    image[y] = image[y]/49;
+  // for (uint16_t y = 0; y < 256; y++) {
+  //   // image[y] = image[y]/49;
+  // }
+
+  // for (uint16_t y = 0; y < 256; y++) {
+  //   waitForPreviousUartByteToBeSent();
+  //   USART1->DATAR = image[y]&0xFF;
+  // }
+  // for (uint16_t y = 0; y < 112; y++) {
+  //   for (uint16_t x = 0; x < 112; x++) {
+  //   waitForPreviousUartByteToBeSent();
+  //   USART1->DATAR = image[16*y/7+x/7];
+    
+  // }
+    
+  // }
+}
+
+void processGrayscaleFrameBitNetMCU2() {
+  waitForPreviousUartByteToBeSent();
+  USART1->DATAR = 0x00; // New command
+
+  waitForPreviousUartByteToBeSent();
+  USART1->DATAR = 4; // Command length
+
+  camera.waitForVsync();
+  camera.ignoreVerticalPadding();
+  // uint16_t image[256]={};
+  for (uint16_t y = 0; y < 112; y++) {
+    lineBufferSendByte = &lineBuffer[0];
+    camera.ignoreHorizontalPaddingLeft();
+    
+    uint16_t x = 0;
+    uint16_t z = 0;
+    while ( x < 160) {
+      
+      camera.waitForPixelClockRisingEdge(); // YUV422 grayscale byte
+      camera.readPixelByte(lineBuffer[z]);
+      // lineBuffer[x] = formatPixelByteGrayscaleFirst(lineBuffer[x]);
+      
+      // image[(16*(int)(y/7))+(int)(x/7)] += lineBuffer[x];    
+      camera.waitForPixelClockRisingEdge(); // YUV422 color byte. Ignore.
+      x++;
+      z++;
+      camera.waitForPixelClockRisingEdge();
+      camera.waitForPixelClockRisingEdge();
+      x++;
+      camera.waitForPixelClockRisingEdge();
+      camera.waitForPixelClockRisingEdge();
+      x++;
+      camera.waitForPixelClockRisingEdge();
+      camera.waitForPixelClockRisingEdge();
+      x++;
+      //  camera.waitForPixelClockRisingEdge();
+      // camera.waitForPixelClockRisingEdge();
+      // x++;
+      //  camera.waitForPixelClockRisingEdge();
+      // camera.waitForPixelClockRisingEdge();
+      // x++;
+      //  camera.waitForPixelClockRisingEdge();
+      // camera.waitForPixelClockRisingEdge();
+      // x++;
+      
+    }
+    // camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    //   camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    //   camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    //    camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    //    camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    //    camera.waitForPixelClockRisingEdge();
+    //   camera.waitForPixelClockRisingEdge();
+      
+    camera.ignoreHorizontalPaddingRight();
+    if(y%4==0 && y<112) {
+      for (int i = 0; i < 28; i++) {
+        waitForPreviousUartByteToBeSent();
+        USART1->DATAR = lineBuffer[i];
+        // i=i+3;
   }
+    }
+
+  }
+  
+  // for (uint16_t y = 0; y < 256; y++) {
+  //   // image[y] = image[y]/49;
+  // }
 
   // for (uint16_t y = 0; y < 256; y++) {
   //   waitForPreviousUartByteToBeSent();
@@ -255,11 +349,11 @@ void commandStartNewFrame(uint8_t pixelFormat) {
 
   uint8_t checksum = 0;
   checksum = sendNextCommandByte(checksum, COMMAND_NEW_FRAME);
-  checksum = sendNextCommandByte(checksum, lineLength & 0xFF); // lower 8 bits of image width
-  checksum = sendNextCommandByte(checksum, lineCount & 0xFF); // lower 8 bits of image height
+  checksum = sendNextCommandByte(checksum, 28 & 0xFF); // lower 8 bits of image width
+  checksum = sendNextCommandByte(checksum, 28 & 0xFF); // lower 8 bits of image height
   checksum = sendNextCommandByte(checksum, 
-      ((lineLength >> 8) & 0x03) // higher 2 bits of image width
-      | ((lineCount >> 6) & 0x0C) // higher 2 bits of image height
+      ((28 >> 8) & 0x03) // higher 2 bits of image width
+      | ((28 >> 6) & 0x0C) // higher 2 bits of image height
       | ((pixelFormat << 4) & 0xF0));
 
   waitForPreviousUartByteToBeSent();
