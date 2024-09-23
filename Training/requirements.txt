@@ -1,0 +1,7 @@
+torch
+torchvision
+numpy
+PyYAML
+tensorboard
+matplotlib
+seaborn
