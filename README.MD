@@ -11,12 +11,12 @@
 - Complete demonstration implemented on VSD Squadron Mini based on Risc-V microcobtroller
 
 ## Demo Video 
-[![Demo Video](https://youtu.be/YNRfUTBifs0)]
+[Demo Video](https://youtu.be/YNRfUTBifs0)
 
 ## Social Media link
-[![Media linkedIn Post](https://www.linkedin.com/posts/dhanvanti-bhavsar-387620160_the-india-expo-centre-mart-buzzed-with-activity-7241767522583138305-5wRa?utm_source=share&utm_medium=member_desktop)]
+[Media linkedIn Post](https://www.linkedin.com/posts/dhanvanti-bhavsar-387620160_the-india-expo-centre-mart-buzzed-with-activity-7241767522583138305-5wRa?utm_source=share&utm_medium=member_desktop)
 
-[![linkedIn Post](https://www.linkedin.com/posts/dhanvanti-bhavsar-387620160_semicon2024-vlsi-riscv-activity-7241765933315174400-G3Z_?utm_source=share&utm_medium=member_desktop)]
+[linkedIn Post](https://www.linkedin.com/posts/dhanvanti-bhavsar-387620160_semicon2024-vlsi-riscv-activity-7241765933315174400-G3Z_?utm_source=share&utm_medium=member_desktop)
 
 
 

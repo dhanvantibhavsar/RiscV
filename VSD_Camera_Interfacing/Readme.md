@@ -46,7 +46,7 @@ state VSDSquadronMiniUART{PD5 RX PD6 TX }
 2. Comment line no 10 and Uncomment line no. 11 in [SendUartImageBitNet.cpp](./src/SendUartImageBitNet.cpp) file and define DisplayMode = 0 \
 this will send image in 112x 112 size to be displayed on ArduImageCapture
 3. Select Correct Port to which the board is connected
-4. Build and upload the code to Arduino
+4. Build and upload the code to VSD Squadron Mini board
 5. Open Arduino IDE then select `tool> ArduImageCapture`
 6. Select correct port and click on listen
     - You should be able to visualize the captured image on the ArduImageCapture
@@ -58,7 +58,7 @@ this will send image in 112x 112 size to be displayed on ArduImageCapture
 1.  Comment line no 11 and Uncomment line no. 10 in [SendUartImageBitNet.cpp](./src/SendUartImageBitNet.cpp) file and define DisplayMode = 1 \
 this will send image in 28x28 to be used for prediction
 2. Select Correct Port to which the board is connected
-3. Build and upload the code to Arduino
+3. Build and upload the code to VSD Squadron Mini Board
 4. Push Button to capture and send image Data
 5. Verify Data being Sent over UART using RealTerm 
 ![UART Data Visualization using RealTerm](../images/realterm_data_visualization.jpeg)
